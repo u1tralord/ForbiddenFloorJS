@@ -4,7 +4,7 @@ var FPS = 60;
 
 var canvasElement;
 var canvas;
-var ResourceManager = GetResourceManager();
+var resourceManager = GetResourceManager();
 
 window.onload = function() {
     canvasElement = $("<canvas width='" + CANVAS_WIDTH + "' height='" + CANVAS_HEIGHT + "'></canvas");
@@ -12,30 +12,15 @@ window.onload = function() {
     canvasElement.appendTo(document.getElementById("gameDiv"));
 };
 
-function GetResourceManager() {
-    I = {};
-    I.resources = {};
+resourceManager.loadResource("spritesheet", "res/img/sprite.png", "image");
 
-    I.loadResource = function(id, path, type){
-        if(type == "image")
-            I.resources[id] = ResImage(path);
-
-        console.log(id + " " + path + " " + type);
-    };
-
-    I.getResource = function(id){
-        return I.resources[id];
-    };
-
-    return I;
-};
-
-ResourceManager.loadResource("spritesheet", "res/img/sprite.png", "image");
-
+//Main drawing function of the game
 setInterval(function() {
-    ResourceManager.getResource("spritesheet").draw(0, 0, canvas);
+    resourceManager.getResource("spritesheet").draw(0, 0, canvas);
 }, 1000/FPS);
 
+
+//Returns and image object for the resource manager to manage
 function ResImage(path){
     var I = {};
     I.loaded = false;
@@ -56,3 +41,23 @@ function ResImage(path){
     }
     return I;
 }
+
+
+//Resource manager handles loading and retrieving of all necessary resources
+function GetResourceManager() {
+    I = {};
+    I.resources = {};
+
+    I.loadResource = function(id, path, type){
+        if(type == "image")
+            I.resources[id] = ResImage(path);
+
+        console.log(id + " " + path + " " + type);
+    };
+
+    I.getResource = function(id){
+        return I.resources[id];
+    };
+
+    return I;
+};
